@@ -1,26 +1,29 @@
 # Overview
 
-Internalize is a simple script to convert all private repos to internal. 
-
-Built using GitHub Copilot.
+Internalize is a simple script to convert all private repos to internal. Built with GitHub Copilot.
 
 ## Usage
 
-First run `npm install` to install dependencies.
-
-Then, to use:
+1. run `npm install` to install dependencies.
+2. Set the following environment variables:
+    - `ORGANIZATION` - The name of the organization
+    - `TOKEN` - Administrator GitHub token with `repo` scope for all repos in the organization.
+3. Run the script:
 
 ```bash
-$ node internalize.js <organization> <token>
+$ node internalize.js
 ```
 
-### Parameters
+## Containrized Usage
 
-- `organization` - The name of the organization
-- `token` - Administrator GitHub token with `repo` scope for all repos in the organization.
-
-## Example
+1. Build the image:
 
 ```bash
-$ node internalize.js octodemo my-token
+$ docker build -t internalize .
+```
+
+2. Run the image:
+
+```bash
+$ docker run -e ORGANIZATION=my-org TOKEN=my-token internalize
 ```

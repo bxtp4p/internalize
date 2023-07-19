@@ -9,11 +9,11 @@
 
 const axios = require("axios");
 
-const organization = process.argv[2];
-const token = process.argv[3];
+const organization = process.env.ORGANIZATION;
+const token = process.env.TOKEN;
 
 if (!organization || !token) {
-  console.error("Usage: node internalize.js <organization> <token>");
+  console.error("Please set ORGANIZATION and TOKEN environment variables");
   process.exit(1);
 }
 
