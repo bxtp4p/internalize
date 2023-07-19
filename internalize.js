@@ -26,36 +26,44 @@ const url = `https://api.github.com/orgs/${organization}/repos?per_page=100`;
 
 async function internalize() {
   try {
-    const response = await axios.get(url, { headers: headers });
-    const repositories = response.data;
+    let page = 1;
+    let repositories = [];
+
+    while (true) {
+      const response = await axios.get(`${url}&page=${page}`, { headers: headers });
+      const pageRepositories = response.data;
+
+      if (pageRepositories.length === 0) {
+        break;
+      }
+
+      repositories = repositories.concat(pageRepositories);
+      page++;
+    }
+
     for (const repository of repositories) {
       // check to see is the repository is private
       // if it is, then change the visibility to internal
       // if it is not, then do nothing
 
-      if (repository.private) {
+      if (repository.visibility === "private") {
         console.log(`Updating repository ${repository.name} to internal`);
 
         try {
           const repositoryUrl = `https://api.github.com/repos/${organization}/${repository.name}`;
           const repositoryData = {
             private: false,
-            visibility: "internal",
+            visibility: "internal"
           };
-          await axios.patch(repositoryUrl, repositoryData, {
-            headers: headers,
-          });
+
+          await axios.patch(repositoryUrl, repositoryData, { headers: headers });
         } catch (error) {
-          console.error(error);
+          console.error(`Failed to update repository ${repository.name}: ${error.message}`);
         }
-      } else {
-        console.log(
-          `Repository ${repository.name} is already internal or public`
-        );
       }
     }
   } catch (error) {
-    console.error(error);
+    console.error(`Failed to fetch repositories: ${error.message}`);
   }
 }
 
