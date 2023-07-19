@@ -14,7 +14,7 @@ Internalize is a simple script to convert all private repos to internal. Built w
 $ node internalize.js
 ```
 
-## Containrized Usage
+## Containerized Usage
 
 1. Build the image:
 
